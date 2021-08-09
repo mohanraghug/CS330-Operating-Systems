@@ -1,0 +1,6 @@
+VM_Area:[1]	MMAP_Page_Faults[0]
+VM_Area:[6]	MMAP_Page_Faults[0]
+VM_Area:[1]	MMAP_Page_Faults[0]
+VM_Area:[1]	MMAP_Page_Faults[50]
+VM_Area:[1]	MMAP_Page_Faults[50]
+(Sig_Exit) PF Error @ [RIP: 0x100000C53] [accessed VA: 0x180201000] [error code: 0x6]

@@ -1,0 +1,24 @@
+a.out
+executeCommand.c
+out
+runTests.sh
+tests
+cmd : ls ,directory : /home/mohanr/anaconda3/condabin 
+3.foo : /home/mohanr/anaconda3/condabin/ls 
+cmd : ls ,directory : /home/mohanr/anaconda3/bin 
+3.foo : /home/mohanr/anaconda3/bin/ls 
+cmd : ls ,directory : /home/mohanr/.cargo/bin 
+3.foo : /home/mohanr/.cargo/bin/ls 
+cmd : ls ,directory : /home/mohanr/apps/texlive/2020/bin/x86_64-linux 
+3.foo : /home/mohanr/apps/texlive/2020/bin/x86_64-linux/ls 
+cmd : ls ,directory : /usr/local/sbin 
+3.foo : /usr/local/sbin/ls 
+cmd : ls ,directory : /usr/local/bin 
+3.foo : /usr/local/bin/ls 
+cmd : ls ,directory : /usr/sbin 
+3.foo : /usr/sbin/ls 
+cmd : ls ,directory : /usr/bin 
+3.foo : /usr/bin/ls 
+/usr/bin/ls
+Before calling fork mypid = 1776518
+0

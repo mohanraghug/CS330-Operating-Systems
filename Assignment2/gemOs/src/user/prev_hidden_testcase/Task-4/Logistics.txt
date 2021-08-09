@@ -1,0 +1,8 @@
+    Task4 -> 10 Marks
+testcase4.c         -> 2marks
+hidden_testcase1.c  -> 2
+hidden_testcase2.c  -> 2
+hidden_testcase3.c  -> 1
+hidden_testcase4.c  -> 1
+hidden_testcase5.c  -> 1
+hidden_testcase6.c  -> 1

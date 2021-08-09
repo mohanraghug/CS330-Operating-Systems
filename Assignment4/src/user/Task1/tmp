@@ -1,0 +1,146 @@
+// starting is in this pos
+            int ok = 1;
+
+            u64 len = length;
+
+            u64 at = (u64)addr;
+
+            struct vm_area *cur = head;
+
+            int ret = 1;
+
+            while (len != 0 && cur != NULL)
+            {
+                if (at != (u64)addr && at != cur->vm_start)
+                    break;
+
+                if (cur->mapping_type == HUGE_PAGE_MAPPING)
+                {
+                    ret = -EVMAOCCUPIED;
+                    break;
+                }
+
+                if (cur->access_flags != prot && force_prot == 0)
+                {
+                    ret = -EDIFFPROT;
+                    break;
+                }
+
+                u32 take = min(len, cur->vm_end - at);
+                len -= take;
+                at += take;
+                if (len)
+                    cur = cur->vm_next;
+            }
+
+            if (len != 0)
+            {
+                return -ENOMAPPING;
+            }
+
+            printk("[huge_mmap] Here with %x \n", (cur == head));
+
+            for (u64 foo = (u64)addr; foo != to; foo += HUGE_PAGE_SIZE)
+            {
+                int flag = 0;
+                // check if any page is allocated
+                for (u64 bar = foo; bar != foo + HUGE_PAGE_SIZE; bar += PAGE_SIZE)
+                {
+                    u64 *pte = get_user_pte(current, bar, 0);
+                    if (pte != NULL)
+                    {
+                        flag = 1;
+                    }
+                }
+
+                if (flag)
+                {
+                    void *naddr = os_hugepage_alloc();
+
+                    for (u64 bar = foo; bar != foo + HUGE_PAGE_SIZE; bar += PAGE_SIZE)
+                    {
+                        // TODO: Implement this thing..
+                        u64 *pte = get_user_pte(current, bar, 0);
+                        if (pte != NULL)
+                        {
+                            memcpy((char *)naddr + (bar - foo), (char *)bar, PAGE_SIZE);
+                            do_unmap_user(current, bar);
+                        }
+                    }
+                    vm_area_map_physical_page(current, foo, prot, HUGE_PAGE_MAPPING, get_hugepage_pfn(naddr));
+                }
+            }
+
+            if (head == cur)
+            {
+                if (head->vm_start == (u64)addr && head->vm_end == (u64)to)
+                {
+                    head->access_flags = prot;
+                    head->mapping_type = HUGE_PAGE_MAPPING;
+                }
+                else if (head->vm_start == (u64)addr)
+                {
+                    struct vm_area *foo = create_vm_area(to, head->vm_end, head->access_flags, NORMAL_PAGE_MAPPING);
+                    foo->vm_next = head->vm_next;
+                    head->vm_next = foo;
+                    head->vm_end = to;
+                    head->access_flags = prot;
+                    head->mapping_type = HUGE_PAGE_MAPPING;
+                }
+                else if (head->vm_end == (u64)to)
+                {
+                    struct vm_area *foo = create_vm_area((u64)addr, to, prot, HUGE_PAGE_MAPPING);
+                    foo->vm_next = head->vm_next;
+                    head->vm_next = foo;
+                    head->vm_end = (u64)addr;
+                }
+                else
+                {
+                    struct vm_area *foo = create_vm_area((u64)addr, to, prot, HUGE_PAGE_MAPPING);
+                    struct vm_area *bar = create_vm_area(to, head->vm_end, head->access_flags, NORMAL_PAGE_MAPPING);
+                    bar->vm_next = head->vm_next;
+                    head->vm_next = foo;
+                    foo->vm_next = bar;
+                    head->vm_end = (u64)addr;
+                }
+                return (u64)addr;
+            }
+
+            struct vm_area *new_vm_area = create_vm_area((u64)addr, to, prot, HUGE_PAGE_MAPPING);
+
+            struct vm_area *foo = head->vm_next;
+
+            if (head->vm_start != (u64)addr)
+            {
+                head->vm_next = new_vm_area;
+                head->vm_end = (u64)addr;
+            }
+            else
+            {
+                prev->vm_next = new_vm_area;
+                dealloc_vm_area(head);
+            }
+
+            while (foo != cur)
+            {
+                struct vm_area *tmp = foo->vm_next;
+                dealloc_vm_area(foo);
+                foo = tmp;
+            }
+
+            if (cur->vm_end != to)
+            {
+                new_vm_area->vm_next = cur;
+                cur->vm_start = to;
+            }
+            else
+            {
+                new_vm_area->vm_next = cur->vm_next;
+                dealloc_vm_area(cur);
+            }
+
+            return (u64)addr;
+        }
+
+        prev = head;
+        head = head->vm_next;

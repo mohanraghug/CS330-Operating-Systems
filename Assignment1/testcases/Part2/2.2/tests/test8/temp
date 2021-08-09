@@ -1,0 +1,22 @@
+322426 +++ exited with 0 +++
+322433 <... read resumed>0x7fffb78945b0, 3) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+322432 <... read resumed>0x7ffce25e1f50, 3) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+322431 <... read resumed>0x7ffd3f9c64d0, 3) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+322430 <... read resumed>0x7ffdd710d9a0, 3) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+322429 <... read resumed>0x7ffefff58b60, 3) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+322428 <... read resumed>0x7ffe9904f600, 3) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+322427 <... read resumed>0x7ffd85dcde50, 3) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+322433 --- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
+322432 --- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
+322431 --- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
+322430 --- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
+322429 --- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
+322428 --- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
+322427 --- SIGINT {si_signo=SIGINT, si_code=SI_KERNEL} ---
+322427 +++ killed by SIGINT +++
+322433 +++ killed by SIGINT +++
+322431 +++ killed by SIGINT +++
+322430 +++ killed by SIGINT +++
+322429 +++ killed by SIGINT +++
+322432 +++ killed by SIGINT +++
+322428 +++ killed by SIGINT +++
